@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>สุขสันต์วันครบรอบนะคะ 🎉</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #fffafc;
+      font-family: 'Prompt', sans-serif;
+      overflow: hidden;
+    }
+
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    #container img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin: 10px;
+      animation: popIn 1.5s ease;
+    }
+
+    #message {
+      display: none;
+      max-width: 500px;
+      background: #ffffffdd;
+      border-radius: 20px;
+      padding: 20px 30px;
+      box-shadow: 0 10px 30px rgba(255, 192, 203, 0.3);
+      font-size: 18px;
+      color: #333;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    #message h1 {
+      color: #e91e63;
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
+    #btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #f8bbd0;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+      transition: transform 0.2s;
+    }
+
+    #btn:hover {
+      transform: scale(1.1);
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: url('https://i.imgur.com/Zn6d1Yv.png') no-repeat center;
+      background-size: contain;
+      animation: float 6s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <audio autoplay loop>
+    <source src="love.mp3" type="audio/mpeg">
+  </audio>
+  <canvas id="firework"></canvas>
+  <div id="container">
+    <div style="display:flex; gap: 10px; justify-content: center;">
+      <img src="https://cdn.discordapp.com/attachments/1322875985405808693/1390682224336306306/IMG_0124.png?ex=6880e03f&is=687f8ebf&hm=f32f745d1a1acee792e6681f80aaf863ea4b172d602eb5d312d0f7fcd971b125&" alt="คุณ">
+      <img src="https://media.discordapp.net/attachments/1305414779476774933/1395310495560372224/temp_image_6785DE8A-2997-4BF2-9653-4B6D94201841.webp?ex=68809329&is=687f41a9&hm=f20b6bee3d6e81bf3f89f4f66ed9f90ab89c42b57bc761a2dd24da8053133076&=&format=webp&width=486&height=863" alt="แฟน">
+    </div>
+
+    <div id="message">
+      <h1>สุขสันต์วันครบรอบนะคะ💕</h1>
+      <p>
+        อยู่ด้วยกันมา 7 เดือนแล้วนะ เค้าไม่เคยเบื่อเธอเลยมีแต่รักมากๆขึ้นทุกวัน <br>
+        ถึงบี๋จะบอกให้เค้าหาเวลาให้ตัวเองบ้าง แต่เค้าไม่อยากเหงาและเค้าไม่อยากให้เธออยู่คนเดียวด้วย เค้าอยากอยู่กับเธอนะ<br>
+        อยู่ด้วยกันแบบนี้ไปตลอดเลยนะ โตขึ้นเรามาแต่งงานกันนะคั้บ💓
+      </p>
+    </div>
+    <button id="btn" onclick="showMessage()">💌 กดเลย เค้ามีอะไรจะบอก 💖</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("firework");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let fireworks = [];
+
+    class Firework {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.targetY = Math.random() * canvas.height * 0.4;
+        this.color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+        this.speed = 5 + Math.random() * 3;
+        this.exploded = false;
+        this.particles = [];
+      }
+      update() {
+        if (!this.exploded) {
+          this.y -= this.speed;
+          if (this.y <= this.targetY) {
+            this.exploded = true;
+            for (let i = 0; i < 25; i++) {
+              this.particles.push(new Particle(this.x, this.y, this.color));
+            }
+          }
+        } else {
+          this.particles.forEach(p => p.update());
+        }
+      }
+      draw() {
+        if (!this.exploded) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        } else {
+          this.particles.forEach(p => p.draw());
+        }
+      }
+      done() {
+        return this.exploded && this.particles.every(p => p.alpha <= 0);
+      }
+    }
+
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = 2 + Math.random() * 2;
+        this.alpha = 1;
+        this.fade = 0.02 + Math.random() * 0.015;
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 4;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.fade;
+      }
+      draw() {
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.fillStyle = "rgba(255, 240, 245, 0.15)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (Math.random() < 0.05) {
+        fireworks.push(new Firework());
+      }
+
+      fireworks.forEach((f, i) => {
+        f.update();
+        f.draw();
+        if (f.done()) fireworks.splice(i, 1);
+      });
+    }
+
+    function showMessage() {
+      document.getElementById("message").style.display = 'block';
+    }
+
+    // Floating hearts
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
+    }
+    setInterval(createHeart, 800);
+
+    animate();
+  </script>
+</body>
+</html>
