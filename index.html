@@ -113,8 +113,8 @@
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="anniversary.mp3" type="audio/mpeg">
+  <audio id="bgmusic" loop>
+  <source src="love.mp3" type="audio/mpeg">
   </audio>
   <canvas id="firework"></canvas>
   <div id="container">
@@ -133,7 +133,29 @@
         อยู่ด้วยกันแบบนี้ไปตลอดเลยนะ โตขึ้นเรามาแต่งงานกันนะคั้บ💓
       </p>
     </div>
+    <button id="playMusicBtn" onclick="document.getElementById('bgmusic').play()"> คลิกเพื่อเปิดเพลงรัก 🎶</button>
     <button id="btn" onclick="showMessage()">💌 กดเลย เค้ามีอะไรจะบอก 💖</button>
+    <style>
+  #playMusicBtn {
+    background-color: #ffe0f0;
+    color: #d63384;
+    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
+    transition: all 0.3s ease;
+    font-family: 'Noto Sans Thai', sans-serif;
+    margin: 20px auto;
+    display: block;
+  }
+
+  #playMusicBtn:hover {
+    background-color: #ffd6ec;
+    transform: scale(1.05);
+  }
+</style>
   </div>
 
   <script>
